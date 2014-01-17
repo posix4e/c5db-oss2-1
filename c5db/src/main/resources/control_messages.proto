@@ -1,0 +1,62 @@
+/*
+ * Copyright (C) 2013  Ohm Data
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  This file incorporates work covered by the following copyright and
+ *  permission notice:
+ */
+package ohmdb.messages;
+
+option java_package = "ohmdb.messages.generated";
+option optimize_for = SPEED;
+
+enum ModuleType {
+    // Cluster discovery module
+    Discovery = 1;
+    // Replication module (RAFT)
+    Replication = 2;
+    // Tablet module (eg: HRegion)
+    Tablet = 3;
+    // RegionServer RPC module
+    RegionServer = 4;
+    // Management Module
+    Management = 5;
+    // Write Ahead Log Module
+    Log = 6;
+}
+
+message StartModule {
+    optional ModuleType module = 1;
+    optional int32 module_port = 2;
+    optional string module_argv = 3;
+}
+
+message StopModule {
+    optional ModuleType module = 1;
+    // Set this to true to make it a 'hard stop', otherwise a graceful shutdown will be used.
+    optional bool hard_stop = 2;
+    optional string stop_reason = 3;
+}
+
+message ModuleSubCommand {
+    optional ModuleType module = 1;
+    optional string sub_command = 2;
+}
+
+message CommandReply {
+    optional bool command_success = 1;
+    optional string command_stdout = 2;
+    optional string command_stderr = 3;
+}
