@@ -14,13 +14,18 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package c5db;
+package c5db.testing;
 
-public class C5ServerConstants {
-  public static final int MSG_SIZE = 100;
-  public static final String LOG_NAME = "log";
-  public static final String WAL_DIR = "wal";
-  public static final String ARCHIVE_DIR = "old_wal";
-  public static final int  MAX_CALL_SIZE = Integer.MAX_VALUE;
-  public static final long MAX_CONTENT_LENGTH_HTTP_AGG = 8192;
+/**
+ * Hamcrest matcher static functions to facilitate byte comparisons.
+ */
+public class BytesMatchers {
+
+  public static BytesEqualMatcher equal(byte[] expectedValue) {
+    return new BytesEqualMatcher(expectedValue);
+  }
+
+  public static BytesEqualMatcher equalTo(byte[] expectedValue) {
+    return equal(expectedValue);
+  }
 }
