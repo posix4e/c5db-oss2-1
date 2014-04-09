@@ -18,8 +18,6 @@
 package c5db;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,23 +33,7 @@ import java.util.UUID;
 public class C5CommonTestUtil {
   protected static final Logger LOG = LoggerFactory.getLogger(C5CommonTestUtil.class);
 
-  protected Configuration conf;
-
   public C5CommonTestUtil() {
-    this(HBaseConfiguration.create());
-  }
-
-  public C5CommonTestUtil(Configuration conf) {
-    this.conf = conf;
-  }
-
-  /**
-   * Returns this class's instance of {@link org.apache.hadoop.conf.Configuration}.
-   *
-   * @return Instance of Configuration.
-   */
-  public Configuration getConfiguration() {
-    return this.conf;
   }
 
   /**
@@ -125,7 +107,6 @@ public class C5CommonTestUtil {
     if (deleteOnExit()) {
       newDir.deleteOnExit();
     }
-    conf.set(propertyName, newDir.getAbsolutePath());
   }
 
   /**

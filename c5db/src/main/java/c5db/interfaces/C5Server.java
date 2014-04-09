@@ -17,18 +17,13 @@
 
 package c5db.interfaces;
 
-import c5db.NioFileConfigDirectory;
-import c5db.messages.generated.CommandReply;
+import c5db.ConfigDirectory;
 import c5db.messages.generated.ModuleType;
 import c5db.util.C5FiberFactory;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Service;
-import io.protostuff.Message;
 import org.jetlang.channels.Channel;
-import org.jetlang.channels.RequestChannel;
 
-import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
@@ -74,41 +69,9 @@ public interface C5Server extends Service {
    */
   public ListenableFuture<C5Module> getModule(ModuleType moduleType);
 
-  /**
-   * A jetlang channel to submit command objects to the 'system'.
-   * A command is the extensible (and not entirely specified/thought out) mechanism by which
-   * entities (code, RPCs, people via command line interfaces, etc) can start/stop/adjust
-   * modules or other configuration settings, or anything else at a cross-service level.
-   * <p>
-   * The intent is to centralize and standardize all configuration, startup, and other details
-   * on how we manage services, servers and whatnot.  Every single operation should be accessible
-   * via command messages, and those command messages should be able to be conveyed via RPC.
-   * This allows administration-via tooling, and avoids the need to have something like
-   * password-less ssh set up (which not all wish to do).
-   * <p>
-   *
-   * @return The jetlang channel to submit command messages
-   */
-  public Channel<Message<?>> getCommandChannel();
-
-  /**
-   * Similar to {@link #getCommandChannel()} except providing a feedback message with information
-   * on the status and success of commands.
-   * <p>
-   *
-   * @return The jetlang request channel to submit requests
-   */
-  public RequestChannel<Message<?>, CommandReply> getCommandRequests();
-
   public Channel<ModuleStateChange> getModuleStateChangeChannel();
 
-  public ImmutableMap<ModuleType, C5Module> getModules() throws ExecutionException, InterruptedException;
-
-  public ListenableFuture<ImmutableMap<ModuleType, C5Module>> getModules2();
-
-  public NioFileConfigDirectory getConfigDirectory();
-
-  public boolean isSingleNodeMode();
+  public ConfigDirectory getConfigDirectory();
 
   /**
    * Return a C5FiberFactory using the passed exception handler, which will be run on the fiber
@@ -135,26 +98,5 @@ public interface C5Server extends Service {
       this.module = module;
       this.state = state;
     }
-  }
-
-  public Channel<ConfigKeyUpdated> getConfigUpdateChannel();
-
-  public static class ConfigKeyUpdated {
-    public final String configKey;
-    public final Object configValue;
-
-    public ConfigKeyUpdated(String configKey, Object configValue) {
-      this.configKey = configKey;
-      this.configValue = configValue;
-    }
-
-    @Override
-    public String toString() {
-      return "ConfigKeyUpdated{" +
-          "configKey='" + configKey + '\'' +
-          ", configValue=" + configValue +
-          '}';
-    }
-
   }
 }

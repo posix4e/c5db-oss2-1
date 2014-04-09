@@ -17,7 +17,6 @@
 
 package c5db.testing;
 
-import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -34,11 +33,7 @@ public class BytesEqualMatcher extends TypeSafeMatcher<byte[]> {
   }
 
   public static String printFirstBytes(byte[] bytes, int firstXBytes) {
-    String rep = Bytes.toStringBinary(bytes, 0, Math.min(firstXBytes, bytes.length));
-    if (bytes.length > firstXBytes) {
-      return rep + "...(" + (bytes.length - firstXBytes) + " more)";
-    }
-    return rep;
+    return "a byte string of length " + bytes.length;
   }
 
   @Override
